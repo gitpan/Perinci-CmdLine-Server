@@ -5,6 +5,8 @@ use strict;
 use warnings;
 #use Log::Any '$log';
 
+use Perinci::CmdLine 1.16;
+
 sub import {
     my $pkg = shift;
 
@@ -54,12 +56,30 @@ _
             req     => 1,
             pos     => 0,
         },
+        cmdline => {
+            summary => 'A Perinci::CmdLine object',
+            description => <<'_',
+
+If you set this argument, you're passing an existing object. Otherwise, a new
+Perinci::CmdLine object will be created (with `cmdline_args` passed to its
+constructor).
+
+_
+            schema => ['obj*'],
+        },
         cmdline_args => {
             summary => 'Arguments to be fed to Perinci::CmdLine constructor',
+            description => <<'_',
+
+If you specify this argument and not `cmdline`, a new Perinci::CmdLine object
+will be created.
+
+_
             schema  => [hash => default => {}],
         },
         package => {
             summary => 'Where to put the functions to access the object',
+            schema  => 'str*',
             description => <<'_',
 
 The default is `Perinci::CmdLine::Server::app::` + `<name>`. But you can put it
@@ -71,8 +91,6 @@ _
     result_naked => 1,
 };
 sub create_cmdline_server {
-    require Perinci::CmdLine;
-
     my %cargs = @_;
 
     # store created cli's by name
@@ -82,7 +100,7 @@ sub create_cmdline_server {
     $name =~ /\A\w+\z/ or die "Invalid name, please use alphanumeric only";
     my $package = $cargs{package} // 'Perinci::CmdLine::Server::app::' . $name;
 
-    my $cli = Perinci::CmdLine->new(
+    my $cli = $cargs{cmdline} // Perinci::CmdLine->new(
         %{ $cargs{cmdline_args} // {} },
         exit => 0,
     );
@@ -131,8 +149,8 @@ _
     $cli;
 }
 
-our $DATE = '2014-07-03'; # DATE
-our $VERSION = '0.02'; # VERSION
+our $DATE = '2014-07-04'; # DATE
+our $VERSION = '0.03'; # VERSION
 
 1;
 # ABSTRACT: Create CLI application instance and functions to access it
@@ -149,7 +167,7 @@ Perinci::CmdLine::Server - Create CLI application instance and functions to acce
 
 =head1 VERSION
 
-This document describes version 0.02 of Perinci::CmdLine::Server (from Perl distribution Perinci-CmdLine-Server), released on 2014-07-03.
+This document describes version 0.03 of Perinci::CmdLine::Server (from Perl distribution Perinci-CmdLine-Server), released on 2014-07-04.
 
 =head1 SYNOPSIS
 
@@ -172,7 +190,7 @@ Or, shortcut for simple cases:
 
 Or, for testing using L<peri-htserve>:
 
- % peri-htserve --gepok-unix-socket /tmp/app1.sock \
+ % peri-htserve --gepok-unix-sockets /tmp/app1.sock \
      -MPerinci::CmdLine::Server=-app1,/Some/Module/some_func \
      Perinci::CmdLine::Server::app::app1,noload
 
@@ -284,9 +302,20 @@ Arguments ('*' denotes required arguments):
 
 =over 4
 
+=item * B<cmdline> => I<obj>
+
+A Perinci::CmdLine object.
+
+If you set this argument, you're passing an existing object. Otherwise, a new
+Perinci::CmdLine object will be created (with C<cmdline_args> passed to its
+constructor).
+
 =item * B<cmdline_args> => I<hash> (default: {})
 
 Arguments to be fed to Perinci::CmdLine constructor.
+
+If you specify this argument and not C<cmdline>, a new Perinci::CmdLine object
+will be created.
 
 =item * B<name>* => I<str>
 
@@ -296,7 +325,7 @@ This function stores the created functions in a hash, keyed by name. If you
 create an application with the same name as previously created, the previous
 instance will be replaced.
 
-=item * B<package> => I<any>
+=item * B<package> => I<str>
 
 Where to put the functions to access the object.
 

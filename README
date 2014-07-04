@@ -3,8 +3,8 @@ NAME
     to access it
 
 VERSION
-    This document describes version 0.02 of Perinci::CmdLine::Server (from
-    Perl distribution Perinci-CmdLine-Server), released on 2014-07-03.
+    This document describes version 0.03 of Perinci::CmdLine::Server (from
+    Perl distribution Perinci-CmdLine-Server), released on 2014-07-04.
 
 SYNOPSIS
   Running the server
@@ -25,7 +25,7 @@ SYNOPSIS
 
     Or, for testing using peri-htserve:
 
-     % peri-htserve --gepok-unix-socket /tmp/app1.sock \
+     % peri-htserve --gepok-unix-sockets /tmp/app1.sock \
          -MPerinci::CmdLine::Server=-app1,/Some/Module/some_func \
          Perinci::CmdLine::Server::app::app1,noload
 
@@ -134,9 +134,20 @@ FUNCTIONS
 
     Arguments ('*' denotes required arguments):
 
+    *   cmdline => *obj*
+
+        A Perinci::CmdLine object.
+
+        If you set this argument, you're passing an existing object.
+        Otherwise, a new Perinci::CmdLine object will be created (with
+        "cmdline_args" passed to its constructor).
+
     *   cmdline_args => *hash* (default: {})
 
         Arguments to be fed to Perinci::CmdLine constructor.
+
+        If you specify this argument and not "cmdline", a new
+        Perinci::CmdLine object will be created.
 
     *   name* => *str*
 
@@ -146,7 +157,7 @@ FUNCTIONS
         If you create an application with the same name as previously
         created, the previous instance will be replaced.
 
-    *   package => *any*
+    *   package => *str*
 
         Where to put the functions to access the object.
 
