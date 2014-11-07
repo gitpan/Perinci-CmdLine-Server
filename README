@@ -3,8 +3,8 @@ NAME
     to access it
 
 VERSION
-    This document describes version 0.03 of Perinci::CmdLine::Server (from
-    Perl distribution Perinci-CmdLine-Server), released on 2014-07-04.
+    This document describes version 0.04 of Perinci::CmdLine::Server (from
+    Perl distribution Perinci-CmdLine-Server), released on 2014-11-07.
 
 SYNOPSIS
   Running the server
@@ -61,8 +61,8 @@ DESCRIPTION
     hardware, those numbers are for 2011-2013 PC/laptop hardware). Some of
     the cause of the overhead is subroutine wrapping (see
     Perinci::Sub::Wrapper) which also involves compilation of Sah schemas
-    (see Data::Schema), all of which are necessary for the convenience of
-    using Rinci metadata to specify aspects of your functions.
+    (see Data::Sah), all of which are necessary for the convenience of using
+    Rinci metadata to specify aspects of your functions.
 
     This level of overhead is a bit annoying when we are doing shell tab
     completion (Perinci::CmdLine-based applications call themselves for
@@ -130,7 +130,7 @@ FUNCTIONS
 
     Currently the functions created are:
 
-        complete_cmdline
+     complete_cmdline
 
     Arguments ('*' denotes required arguments):
 
@@ -141,6 +141,10 @@ FUNCTIONS
         If you set this argument, you're passing an existing object.
         Otherwise, a new Perinci::CmdLine object will be created (with
         "cmdline_args" passed to its constructor).
+
+        Note: it is desirable that your existing Perinci::CmdLine object has
+        its attribute exit => 0 :-) Otherwise, it will exit after the first
+        run().
 
     *   cmdline_args => *hash* (default: {})
 
@@ -161,10 +165,12 @@ FUNCTIONS
 
         Where to put the functions to access the object.
 
-        The default is "Perinci::CmdLine::Server::app::" + "<name">. But you
+        The default is "Perinci::CmdLine::Server::app::" + "<name>". But you
         can put it somewhere else. The functions will be installed here.
 
     Return value:
+
+     (any)
 
 SEE ALSO
     Perinci::CmdLine
@@ -177,7 +183,7 @@ HOMEPAGE
 
 SOURCE
     Source repository is at
-    <https://github.com/sharyanto/perl-Perinci-CmdLine-Server>.
+    <https://github.com/perlancar/perl-Perinci-CmdLine-Server>.
 
 BUGS
     Please report any bugs or feature requests on the bugtracker website
@@ -188,10 +194,10 @@ BUGS
     to an existing test-file that illustrates the bug or desired feature.
 
 AUTHOR
-    Steven Haryanto <stevenharyanto@gmail.com>
+    perlancar <perlancar@cpan.org>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2014 by Steven Haryanto.
+    This software is copyright (c) 2014 by perlancar@cpan.org.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.

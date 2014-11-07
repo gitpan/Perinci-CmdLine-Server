@@ -5,7 +5,7 @@ use strict;
 use warnings;
 #use Log::Any '$log';
 
-use Perinci::CmdLine 1.16;
+use Perinci::CmdLine 1.17;
 
 sub import {
     my $pkg = shift;
@@ -63,6 +63,9 @@ _
 If you set this argument, you're passing an existing object. Otherwise, a new
 Perinci::CmdLine object will be created (with `cmdline_args` passed to its
 constructor).
+
+Note: it is desirable that your existing Perinci::CmdLine object has its
+attribute exit => 0 :-) Otherwise, it will exit after the first run().
 
 _
             schema => ['obj*'],
@@ -140,7 +143,6 @@ _
             local $ENV{COMP_POINT} = $fargs{point};
             local $ENV{PERINCI_CMDLINE_SERVER} = 1;
             $cli->run();
-            [200, "OK", $cli->{_compres}];
         };
     }
 
@@ -149,8 +151,8 @@ _
     $cli;
 }
 
-our $DATE = '2014-07-04'; # DATE
-our $VERSION = '0.03'; # VERSION
+our $DATE = '2014-11-07'; # DATE
+our $VERSION = '0.04'; # VERSION
 
 1;
 # ABSTRACT: Create CLI application instance and functions to access it
@@ -167,7 +169,7 @@ Perinci::CmdLine::Server - Create CLI application instance and functions to acce
 
 =head1 VERSION
 
-This document describes version 0.03 of Perinci::CmdLine::Server (from Perl distribution Perinci-CmdLine-Server), released on 2014-07-04.
+This document describes version 0.04 of Perinci::CmdLine::Server (from Perl distribution Perinci-CmdLine-Server), released on 2014-11-07.
 
 =head1 SYNOPSIS
 
@@ -227,9 +229,8 @@ Currently, L<Perinci::CmdLine>-based CLI applications have a perceptible startup
 overhead (between 0.15-0.35s or even more, depending on your hardware, those
 numbers are for 2011-2013 PC/laptop hardware). Some of the cause of the overhead
 is subroutine wrapping (see L<Perinci::Sub::Wrapper>) which also involves
-compilation of L<Sah> schemas (see L<Data::Schema>), all of which are necessary
-for the convenience of using L<Rinci> metadata to specify aspects of your
-functions.
+compilation of L<Sah> schemas (see L<Data::Sah>), all of which are necessary for
+the convenience of using L<Rinci> metadata to specify aspects of your functions.
 
 This level of overhead is a bit annoying when we are doing shell tab completion
 (Perinci::CmdLine-based applications call themselves for doing tab completion,
@@ -296,7 +297,7 @@ Create Perinci::CmdLine object and some functions to access it in a Perl package
 
 Currently the functions created are:
 
-    complete_cmdline
+ complete_cmdline
 
 Arguments ('*' denotes required arguments):
 
@@ -309,6 +310,9 @@ A Perinci::CmdLine object.
 If you set this argument, you're passing an existing object. Otherwise, a new
 Perinci::CmdLine object will be created (with C<cmdline_args> passed to its
 constructor).
+
+Note: it is desirable that your existing Perinci::CmdLine object has its
+attribute exit => 0 :-) Otherwise, it will exit after the first run().
 
 =item * B<cmdline_args> => I<hash> (default: {})
 
@@ -329,12 +333,14 @@ instance will be replaced.
 
 Where to put the functions to access the object.
 
-The default is C<Perinci::CmdLine::Server::app::> + C<<name>>. But you can put it
+The default is C<Perinci::CmdLine::Server::app::> + C<< E<lt>nameE<gt> >>. But you can put it
 somewhere else. The functions will be installed here.
 
 =back
 
 Return value:
+
+ (any)
 
 =for Pod::Coverage ^(import)$
 
@@ -350,7 +356,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Perinci-Cm
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Perinci-CmdLine-Server>.
+Source repository is at L<https://github.com/perlancar/perl-Perinci-CmdLine-Server>.
 
 =head1 BUGS
 
@@ -362,11 +368,11 @@ feature.
 
 =head1 AUTHOR
 
-Steven Haryanto <stevenharyanto@gmail.com>
+perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Steven Haryanto.
+This software is copyright (c) 2014 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
